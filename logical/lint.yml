@@ -1,0 +1,148 @@
+# Taskfile configuration
+# Path: logical/lint.yml
+# Description: High-level linting workflow tasks
+
+version: "3"
+
+tasks:
+  # --------------------------------------------------------------------------
+  # Main Lint Tasks
+  # --------------------------------------------------------------------------
+
+  lint:
+    desc: Run all linting checks
+    aliases:
+      - lint:check
+    cmds:
+      - task: _lint-typescript
+      - task: _lint-python
+      - task: _lint-rust
+      - task: _lint-go
+
+  lint:fix:
+    desc: Fix all linting issues
+    aliases:
+      - fix
+    cmds:
+      - task: _lint-fix-typescript
+      - task: _lint-fix-python
+      - task: _lint-fix-rust
+      - task: _lint-fix-go
+
+  lint:fix:unsafe:
+    desc: Fix all linting issues (unsafe)
+    aliases:
+      - fix:unsafe
+    cmds:
+      - task: _lint-fix-unsafe-typescript
+
+  # --------------------------------------------------------------------------
+  # Watch Mode Tasks
+  # --------------------------------------------------------------------------
+
+  lint:watch:
+    desc: Run linting in watch mode
+    cmds:
+      - task: _lint-watch-typescript
+    watch: true
+
+  lint:fix:watch:
+    desc: Run linting with auto-fix in watch mode
+    aliases:
+      - fix:watch
+    cmds:
+      - task: _lint-fix-watch-typescript
+    watch: true
+
+  # --------------------------------------------------------------------------
+  # Internal: TypeScript/JavaScript Linting
+  # --------------------------------------------------------------------------
+
+  _lint-typescript:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_TYPESCRIPT}}" != "true" ]'
+    cmds:
+      - task: biome:check
+
+  _lint-fix-typescript:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_TYPESCRIPT}}" != "true" ]'
+    cmds:
+      - task: biome:check:write
+
+  _lint-fix-unsafe-typescript:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_TYPESCRIPT}}" != "true" ]'
+    cmds:
+      - task: biome:check:unsafe
+
+  _lint-watch-typescript:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_TYPESCRIPT}}" != "true" ]'
+    cmds:
+      - task: biome:check:watch
+
+  _lint-fix-watch-typescript:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_TYPESCRIPT}}" != "true" ]'
+    cmds:
+      - task: biome:check:write:watch
+
+  # --------------------------------------------------------------------------
+  # Internal: Python Linting (placeholder)
+  # --------------------------------------------------------------------------
+
+  _lint-python:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_PYTHON}}" != "true" ]'
+    cmds:
+      - echo "Python linting not yet implemented"
+
+  _lint-fix-python:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_PYTHON}}" != "true" ]'
+    cmds:
+      - echo "Python linting fix not yet implemented"
+
+  # --------------------------------------------------------------------------
+  # Internal: Rust Linting (placeholder)
+  # --------------------------------------------------------------------------
+
+  _lint-rust:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_RUST}}" != "true" ]'
+    cmds:
+      - echo "Rust linting not yet implemented"
+
+  _lint-fix-rust:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_RUST}}" != "true" ]'
+    cmds:
+      - echo "Rust linting fix not yet implemented"
+
+  # --------------------------------------------------------------------------
+  # Internal: Go Linting (placeholder)
+  # --------------------------------------------------------------------------
+
+  _lint-go:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_GO}}" != "true" ]'
+    cmds:
+      - echo "Go linting not yet implemented"
+
+  _lint-fix-go:
+    internal: true
+    status:
+      - '[ "{{.ENABLE_GO}}" != "true" ]'
+    cmds:
+      - echo "Go linting fix not yet implemented"

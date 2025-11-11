@@ -1,0 +1,27 @@
+# Taskfile configuration
+# Path: logical.yml
+# Description: Aggregator for all logical workflow taskfiles
+
+version: "3"
+
+includes:
+  lint:
+    taskfile: ./logical/lint.yml
+    flatten: true
+
+  # Additional logical workflows can be added here in future PRs:
+  # format:
+  #   taskfile: ./logical/format.yml
+  #   flatten: true
+  # test:
+  #   taskfile: ./logical/test.yml
+  #   flatten: true
+  # build:
+  #   taskfile: ./logical/build.yml
+  #   flatten: true
+  # ci:
+  #   taskfile: ./logical/ci.yml
+  #   flatten: true
+  # docs:
+  #   taskfile: ./logical/docs.yml
+  #   flatten: true

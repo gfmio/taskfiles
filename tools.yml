@@ -1,0 +1,54 @@
+# Taskfile configuration
+# Path: tools.yml
+# Description: Aggregator for all tool-specific taskfiles
+
+version: "3"
+
+includes:
+  # TypeScript/JavaScript Tools
+  biome:
+    taskfile: ./tools/biome.yml
+    flatten: true
+
+  # Additional tools can be added here in future PRs:
+  # vitest:
+  #   taskfile: ./tools/vitest.yml
+  #   flatten: true
+  # tsc:
+  #   taskfile: ./tools/tsc.yml
+  #   flatten: true
+  # eslint:
+  #   taskfile: ./tools/eslint.yml
+  #   flatten: true
+
+  # Python Tools
+  # ruff:
+  #   taskfile: ./tools/ruff.yml
+  #   flatten: true
+  # mypy:
+  #   taskfile: ./tools/mypy.yml
+  #   flatten: true
+  # pytest:
+  #   taskfile: ./tools/pytest.yml
+  #   flatten: true
+
+  # Rust Tools
+  # cargo:
+  #   taskfile: ./tools/cargo.yml
+  #   flatten: true
+  # clippy:
+  #   taskfile: ./tools/clippy.yml
+  #   flatten: true
+
+  # Go Tools
+  # go:
+  #   taskfile: ./tools/go.yml
+  #   flatten: true
+  # golangci-lint:
+  #   taskfile: ./tools/golangci-lint.yml
+  #   flatten: true
+
+  # Universal Tools
+  # git:
+  #   taskfile: ./tools/git.yml
+  #   flatten: true

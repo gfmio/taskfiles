@@ -1,0 +1,152 @@
+# Taskfile configuration
+# Path: tools/biome.yml
+# Description: Biome linter and formatter tasks
+
+version: "3"
+
+vars:
+  # Control variable for this taskfile - can be overridden
+  ENABLE_BIOME: '{{.ENABLE_BIOME | default "false"}}'
+
+  # Biome configuration
+  BIOME_CONFIG: '{{.BIOME_CONFIG | default "biome.json"}}'
+
+  # Source file patterns
+  SRC_TS_FILES: '{{.SRC_TS_FILES | default "src/**/*.ts"}}'
+  SRC_TSX_FILES: '{{.SRC_TSX_FILES | default "src/**/*.tsx"}}'
+  SRC_JS_FILES: '{{.SRC_JS_FILES | default "src/**/*.js"}}'
+  SRC_JSX_FILES: '{{.SRC_JSX_FILES | default "src/**/*.jsx"}}'
+
+tasks:
+  # --------------------------------------------------------------------------
+  # Check Tasks
+  # --------------------------------------------------------------------------
+
+  biome:check:
+    desc: Run Biome linting checks
+    status:
+      - '[ "{{.ENABLE_BIOME}}" != "true" ]'
+    cmds:
+      - bun run biome check .
+    sources:
+      - "{{.SRC_TS_FILES}}"
+      - "{{.SRC_TSX_FILES}}"
+      - "{{.SRC_JS_FILES}}"
+      - "{{.SRC_JSX_FILES}}"
+      - "{{.BIOME_CONFIG}}"
+
+  biome:check:write:
+    desc: Run Biome with auto-fix
+    status:
+      - '[ "{{.ENABLE_BIOME}}" != "true" ]'
+    cmds:
+      - bun run biome check --write .
+    sources:
+      - "{{.SRC_TS_FILES}}"
+      - "{{.SRC_TSX_FILES}}"
+      - "{{.SRC_JS_FILES}}"
+      - "{{.SRC_JSX_FILES}}"
+      - "{{.BIOME_CONFIG}}"
+
+  biome:check:unsafe:
+    desc: Run Biome with unsafe auto-fix
+    status:
+      - '[ "{{.ENABLE_BIOME}}" != "true" ]'
+    cmds:
+      - bun run biome check --write --unsafe .
+    sources:
+      - "{{.SRC_TS_FILES}}"
+      - "{{.SRC_TSX_FILES}}"
+      - "{{.SRC_JS_FILES}}"
+      - "{{.SRC_JSX_FILES}}"
+      - "{{.BIOME_CONFIG}}"
+
+  # --------------------------------------------------------------------------
+  # Format Tasks
+  # --------------------------------------------------------------------------
+
+  biome:format:
+    desc: Check formatting with Biome
+    status:
+      - '[ "{{.ENABLE_BIOME}}" != "true" ]'
+    cmds:
+      - bun run biome format .
+    sources:
+      - "{{.SRC_TS_FILES}}"
+      - "{{.SRC_TSX_FILES}}"
+      - "{{.SRC_JS_FILES}}"
+      - "{{.SRC_JSX_FILES}}"
+      - "{{.BIOME_CONFIG}}"
+
+  biome:format:write:
+    desc: Format code with Biome
+    status:
+      - '[ "{{.ENABLE_BIOME}}" != "true" ]'
+    cmds:
+      - bun run biome format --write .
+    sources:
+      - "{{.SRC_TS_FILES}}"
+      - "{{.SRC_TSX_FILES}}"
+      - "{{.SRC_JS_FILES}}"
+      - "{{.SRC_JSX_FILES}}"
+      - "{{.BIOME_CONFIG}}"
+
+  # --------------------------------------------------------------------------
+  # Watch Mode Tasks
+  # --------------------------------------------------------------------------
+
+  biome:check:watch:
+    desc: Run Biome linting in watch mode
+    status:
+      - '[ "{{.ENABLE_BIOME}}" != "true" ]'
+    cmds:
+      - bun run biome check . --watch
+    sources:
+      - "{{.SRC_TS_FILES}}"
+      - "{{.SRC_TSX_FILES}}"
+      - "{{.SRC_JS_FILES}}"
+      - "{{.SRC_JSX_FILES}}"
+      - "{{.BIOME_CONFIG}}"
+    watch: true
+
+  biome:check:write:watch:
+    desc: Run Biome with auto-fix in watch mode
+    status:
+      - '[ "{{.ENABLE_BIOME}}" != "true" ]'
+    cmds:
+      - bun run biome check --write . --watch
+    sources:
+      - "{{.SRC_TS_FILES}}"
+      - "{{.SRC_TSX_FILES}}"
+      - "{{.SRC_JS_FILES}}"
+      - "{{.SRC_JSX_FILES}}"
+      - "{{.BIOME_CONFIG}}"
+    watch: true
+
+  biome:format:watch:
+    desc: Check formatting with Biome in watch mode
+    status:
+      - '[ "{{.ENABLE_BIOME}}" != "true" ]'
+    cmds:
+      - bun run biome format . --watch
+    sources:
+      - "{{.SRC_TS_FILES}}"
+      - "{{.SRC_TSX_FILES}}"
+      - "{{.SRC_JS_FILES}}"
+      - "{{.SRC_JSX_FILES}}"
+      - "{{.BIOME_CONFIG}}"
+    watch: true
+
+  biome:format:write:watch:
+    desc: Format code with Biome in watch mode
+    status:
+      - '[ "{{.ENABLE_BIOME}}" != "true" ]'
+    cmds:
+      - bun run biome format --write . --watch
+    sources:
+      - "{{.SRC_TS_FILES}}"
+      - "{{.SRC_TSX_FILES}}"
+      - "{{.SRC_JS_FILES}}"
+      - "{{.SRC_JSX_FILES}}"
+      - "{{.BIOME_CONFIG}}"
+    watch: true

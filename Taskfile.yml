@@ -1,0 +1,52 @@
+# Taskfile configuration
+# Path: Taskfile.yml
+# Description: Root taskfile for the taskfiles repository
+
+version: "3"
+
+vars:
+  # Base URL for remote includes - can be overridden via environment variable
+  TASKFILES_BASE_URL:
+    sh: |
+      # Check for local development copies first
+      if [ -d "./taskfiles" ]; then
+        echo "./taskfiles"
+      elif [ -d "../taskfiles" ]; then
+        echo "../taskfiles"
+      else
+        # Default to current directory for this repo
+        echo "."
+      fi
+
+includes:
+  # Include detection for auto-detection of tools and stacks
+  detection:
+    taskfile: ./presets/detection.yml
+    # Don't flatten - keep under detection: namespace to avoid conflicts
+
+  # Include all tool-specific tasks
+  tools:
+    taskfile: ./tools.yml
+    flatten: true
+
+  # Include all logical workflow tasks
+  logical:
+    taskfile: ./logical.yml
+    flatten: true
+
+tasks:
+  default:
+    desc: Show all available tasks
+    cmds:
+      - task --list-all
+
+  info:
+    desc: Display detected project configuration
+    cmds:
+      - task: detection:info
+
+  validate:
+    desc: Validate all Taskfile.yml files
+    cmds:
+      - task --dry --list-all > /dev/null
+      - echo "✓ All Taskfiles are valid"
