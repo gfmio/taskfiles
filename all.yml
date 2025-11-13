@@ -1,6 +1,6 @@
 # Taskfile configuration
 # Path: all.yml
-# Description: All-in-one include for taskfiles - includes detection, tools, and logical workflows
+# Description: All-in-one include for taskfiles - includes tools and logical workflows
 #
 # Usage - Option 1 (Recommended): Import without namespace, let inner structure show
 #   includes:
@@ -12,7 +12,7 @@
 #   includes:
 #     taskfiles:
 #       taskfile: https://raw.githubusercontent.com/gfmio/taskfiles/main/all.yml
-#       # Tasks will be: taskfiles:detection:info, taskfiles:lint, etc.
+#       # Tasks will be: taskfiles:lint, taskfiles:biome:check, etc.
 #
 # With local development:
 #   vars:
@@ -25,10 +25,6 @@
 version: "3"
 
 includes:
-  # Detection (not flattened to avoid task name conflicts)
-  detection:
-    taskfile: ./presets/detection.yml
-
   # Tools (flattened for convenience)
   tools:
     taskfile: ./tools.yml
