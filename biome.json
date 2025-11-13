@@ -1,33 +1,16 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
-  "extends": "@gfmio/config-biome/biome.json",
+  "extends": ["@gfmio/config-biome/biome.json"],
   "overrides": [
     {
       "includes": [
+        ".vscode/*.json",
         ".devcontainer/devcontainer.json"
       ],
       "json": {
         "parser": {
           "allowComments": true,
           "allowTrailingCommas": true
-        }
-      }
-    },
-    {
-      "includes": [
-        "examples/**/*.ts"
-      ],
-      "linter": {
-        "rules": {
-          "nursery": {
-            "useExplicitType": "off"
-          },
-          "style": {
-            "noMagicNumbers": "off"
-          },
-          "suspicious": {
-            "noConsole": "off"
-          }
         }
       }
     }
