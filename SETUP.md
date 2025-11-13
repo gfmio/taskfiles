@@ -77,9 +77,10 @@ task --list-all
 
 Each tool should be added in a separate PR. Here's the checklist:
 
-#### For a New Tool Taskfile:
+#### For a New Tool Taskfile
 
 1. Create `tools/your-tool.yml`:
+
    ```yaml
    version: "3"
 
@@ -96,6 +97,7 @@ Each tool should be added in a separate PR. Here's the checklist:
    ```
 
 2. Add include to [tools.yml](tools.yml):
+
    ```yaml
    your-tool:
      taskfile: ./tools/your-tool.yml
@@ -103,6 +105,7 @@ Each tool should be added in a separate PR. Here's the checklist:
    ```
 
 3. Add detection to [presets/detection.yml](presets/detection.yml):
+
    ```yaml
    ENABLE_YOUR_TOOL:
      sh: |
@@ -119,7 +122,7 @@ Each tool should be added in a separate PR. Here's the checklist:
 
 6. Update README.md
 
-#### For a New Logical Workflow:
+#### For a New Logical Workflow
 
 1. Create `logical/your-workflow.yml`
 2. Add includes for each language variant (with `status` checks)
@@ -130,6 +133,7 @@ Each tool should be added in a separate PR. Here's the checklist:
 ### Suggested PR Sequence
 
 **Phase 1: TypeScript/JavaScript Tools**
+
 1. PR: Add `vitest` (test framework)
 2. PR: Add `tsc` (type checker)
 3. PR: Add `tsup` (bundler)
@@ -165,9 +169,11 @@ Each tool should be added in a separate PR. Here's the checklist:
 ### Versioning Strategy
 
 Once stable:
+
 1. Tag `v1.0.0`
 2. Create branches for major versions (`v1`, `v2`)
 3. Update examples to use versioned URLs:
+
    ```yaml
    taskfile: https://raw.githubusercontent.com/gfmio/taskfiles/v1/tools.yml
    ```
@@ -192,6 +198,7 @@ This returns 0 (skip) if the tool is NOT enabled, and non-zero (run) if it IS en
 ### Why Per-Tool Enable Variables?
 
 Each tool has its own `ENABLE_TOOL` variable (in addition to language-level `ENABLE_TYPESCRIPT` etc.) because:
+
 1. Users might want TypeScript but not Biome (use ESLint instead)
 2. Allows fine-grained control
 3. Makes testing easier (enable one tool at a time)
@@ -199,11 +206,13 @@ Each tool has its own `ENABLE_TOOL` variable (in addition to language-level `ENA
 ### Why Separate tools/ and logical/?
 
 **tools/** = Tool implementation details
+
 - Specific to one tool
 - Low-level commands
 - Changes when tool changes
 
 **logical/** = User workflows
+
 - Language/tool agnostic
 - High-level tasks
 - Stable API
@@ -215,6 +224,7 @@ This separation allows swapping tools without changing user-facing workflows.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 Key principles:
+
 - One tool/workflow per PR
 - Include detection logic
 - Add test cases

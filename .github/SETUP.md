@@ -21,6 +21,7 @@ Install these GitHub Apps to enable automation features:
 **Install:** [Renovate GitHub App](https://github.com/apps/renovate)
 
 **What it does:**
+
 - Automatically creates PRs for dependency updates
 - Configured via [.github/renovate.json](./renovate.json)
 - Groups updates intelligently (Biome, TypeScript, etc.)
@@ -72,6 +73,7 @@ Configure these settings manually in your repository:
 **Path:** `Settings > General > About`
 
 Add topics (tags) to help others discover your library:
+
 ```
 typescript, library, template, bun, vitest, biome, task, devenv, nix
 ```
@@ -82,7 +84,7 @@ typescript, library, template, bun, vitest, biome, task, devenv, nix
 
 **Branch name pattern:** `main`
 
-### Required Settings:
+### Required Settings
 
 1. **Require a pull request before merging:**
    - ✅ Require approvals: **1**
@@ -166,19 +168,19 @@ gh label create "renovate" --color "0366d6" --description "Renovate dependency u
 
 **Path:** `Settings > Secrets and variables > Actions`
 
-### Required for Publishing:
+### Required for Publishing
 
 If you plan to publish to npm, you'll need:
 
 1. **NPM_TOKEN** - npm access token with publish permissions
-   - Create at: https://www.npmjs.com/settings/[username]/tokens
+   - Create at: <https://www.npmjs.com/settings/[username]/tokens>
    - Type: **Automation** (for CI/CD)
    - See [docs/publishing-setup.md](../../docs/publishing-setup.md) for Trusted Publishers setup (recommended)
 
-### Optional Secrets:
+### Optional Secrets
 
 2. **CODECOV_TOKEN** - For Codecov coverage reports
-   - Get from: https://codecov.io/
+   - Get from: <https://codecov.io/>
    - Used by: `.github/workflows/ci.yml`
 
 ## GitHub Pages
