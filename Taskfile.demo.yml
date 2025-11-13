@@ -3,6 +3,15 @@
 
 version: "3"
 
+# Example root-level overrides (commented out - uncomment to test)
+# vars:
+#   BIOME:
+#     map:
+#       enabled: false
+#   TYPESCRIPT:
+#     map:
+#       tsconfig: tsconfig.build.json
+
 includes:
   all:
     taskfile: ./all.yml
@@ -63,55 +72,43 @@ tasks:
       - echo "✓ Both tools auto-detected"
 
   demo:force-enable:
-    desc: "Demo: Force enable"
-    vars:
-      TYPESCRIPT:
-        map:
-          enabled: "true"
+    desc: "Demo: Force enable (edit root vars to test)"
     cmds:
       - echo "DEMO 2 - Force Enable"
       - echo "====================="
-      - echo "TYPESCRIPT.enabled = true"
+      - echo "To test: Edit Taskfile.demo.yml and uncomment the TYPESCRIPT.enabled: true in root vars"
       - echo ""
       - task: info:typescript
       - echo ""
-      - echo "Attempting typescript:check..."
+      - echo "Current behavior (auto-detect):"
       - task: typescript:check
         ignore_error: true
-      - echo "✓ Task ran (may fail if tsc not installed)"
+      - echo "Note: Define TYPESCRIPT at root vars level to override"
 
   demo:force-disable:
-    desc: "Demo: Force disable"
-    vars:
-      BIOME:
-        map:
-          enabled: "false"
+    desc: "Demo: Force disable (edit root vars to test)"
     cmds:
       - echo "DEMO 3 - Force Disable"
       - echo "======================"
-      - echo "BIOME.enabled = false"
+      - echo "To test: Edit Taskfile.demo.yml and uncomment the BIOME.enabled: false in root vars"
       - echo ""
       - task: info:biome
       - echo ""
-      - echo "Attempting biome:check (should skip)..."
+      - echo "Current behavior:"
       - task: biome:check
-      - echo "✓ Task skipped via status check"
+        ignore_error: true
+      - echo "Note: Define BIOME at root vars level to override"
 
   demo:custom-config:
-    desc: "Demo: Custom configuration"
-    vars:
-      TYPESCRIPT:
-        map:
-          tsconfig: tsconfig.build.json
-          out_dir: build
+    desc: "Demo: Custom configuration (edit root vars to test)"
     cmds:
       - echo "DEMO 4 - Custom Configuration"
       - echo "=============================="
-      - echo "Override tsconfig and out_dir, keep defaults for rest"
+      - echo "To test: Edit Taskfile.demo.yml and uncomment the TYPESCRIPT config in root vars"
       - echo ""
       - task: info:typescript
       - echo ""
-      - echo "✓ Merge combines custom + defaults"
+      - echo "Note: Define TYPESCRIPT at root vars level with custom tsconfig, out_dir, etc."
 
   info:
     desc: Show all tool configurations
