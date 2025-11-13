@@ -11,8 +11,8 @@ vars:
 
   BIOME_defaults:
     map:
-      # Control: "" (auto-detect), "true" (force enable), "false" (force disable)
-      enabled: ""
+      # Control: null (auto-detect), true (force enable), false (force disable)
+      enabled: null
 
       # Configuration file
       config: biome.json
@@ -21,6 +21,14 @@ vars:
       src_patterns: "."
 
   # DON'T define BIOME here - let parent override
+
+  # ============================================================================
+  # Merged Configuration
+  # ============================================================================
+
+  # Merge defaults with user config
+  BIOME_config:
+    sh: echo '{{merge .BIOME_defaults .BIOME | toJson}}'
 
   # ============================================================================
   # Detection
@@ -53,7 +61,7 @@ vars:
       elif [ "$ENABLED" = "false" ]; then
         echo ""
       else
-        # Use detection
+        # null or any other value - use detection
         [ -n "{{._BIOME_DETECTED}}" ] && echo "1" || echo ""
       fi
 
@@ -148,4 +156,4 @@ tasks:
         echo "Biome Configuration:"
         echo "  Enabled:        {{if .ENABLE_BIOME}}true{{else}}false{{end}}"
         echo "  Detected:       {{if ._BIOME_DETECTED}}true{{else}}false{{end}}"
-        echo "  Config:         {{merge .BIOME_defaults .BIOME | toJson}}"
+        echo "  Config:         {{.BIOME_config}}"
