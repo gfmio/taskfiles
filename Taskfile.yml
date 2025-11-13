@@ -4,26 +4,7 @@
 
 version: "3"
 
-vars:
-  # Base URL for remote includes - can be overridden via environment variable
-  TASKFILES_BASE_URL:
-    sh: |
-      # Check for local development copies first
-      if [ -d "./taskfiles" ]; then
-        echo "./taskfiles"
-      elif [ -d "../taskfiles" ]; then
-        echo "../taskfiles"
-      else
-        # Default to current directory for this repo
-        echo "."
-      fi
-
 includes:
-  # Include detection for auto-detection of tools and stacks
-  detection:
-    taskfile: ./presets/detection.yml
-    # Don't flatten - keep under detection: namespace to avoid conflicts
-
   # Include all tool-specific tasks
   tools:
     taskfile: ./tools.yml
@@ -37,13 +18,14 @@ includes:
 tasks:
   default:
     desc: Show all available tasks
-    cmds:
-      - task --list-all
+    cmd: task --list-all
+    silent: true
 
   info:
     desc: Display detected project configuration
     cmds:
-      - task: detection:info
+      - task: biome:info
+      - task: typescript:info
 
   validate:
     desc: Validate all Taskfile.yml files
