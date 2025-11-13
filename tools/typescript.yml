@@ -1,0 +1,149 @@
+# Taskfile configuration
+# Path: tools/typescript.yml
+# Description: TypeScript tooling (V3 architecture with merge pattern)
+
+version: "3"
+
+vars:
+  # ============================================================================
+  # Default Configuration (Tool-Defined)
+  # ============================================================================
+
+  TYPESCRIPT_defaults:
+    map:
+      # Control: "" (auto-detect), "true" (force enable), "false" (force disable)
+      enabled: ""
+
+      # File paths
+      tsconfig: tsconfig.json
+      src_dir: src
+      out_dir: dist
+      build_info_file: .tsbuildinfo
+
+      # Compiler options
+      noEmit: "true"
+      incremental: "true"
+
+  # DON'T define TYPESCRIPT here - let parent override
+
+  # ============================================================================
+  # Detection
+  # ============================================================================
+
+  _TYPESCRIPT_DETECTED:
+    sh: |
+      # Get tsconfig path from merged config
+      TSCONFIG="{{(merge .TYPESCRIPT_defaults .TYPESCRIPT).tsconfig}}"
+
+      # Check for tsconfig
+      test -f "$TSCONFIG" && echo "1" && exit 0
+
+      # Check for typescript in package.json
+      test -f "package.json" && grep -q '"typescript"' package.json 2>/dev/null && echo "1" && exit 0
+
+      echo ""
+
+  # ============================================================================
+  # Enable Flag (Computed)
+  # ============================================================================
+
+  ENABLE_TYPESCRIPT:
+    sh: |
+      ENABLED='{{(merge .TYPESCRIPT_defaults .TYPESCRIPT).enabled}}'
+
+      if [ "$ENABLED" = "true" ]; then
+        echo "1"
+      elif [ "$ENABLED" = "false" ]; then
+        echo ""
+      else
+        # Use detection
+        [ -n "{{._TYPESCRIPT_DETECTED}}" ] && echo "1" || echo ""
+      fi
+
+tasks:
+  # ==========================================================================
+  # Type Checking
+  # ==========================================================================
+
+  typescript:check:
+    desc: Run TypeScript type checking
+    aliases:
+      - tsc:check
+    preconditions:
+      - sh: '[ -n "{{.ENABLE_TYPESCRIPT}}" ]'
+        msg: "TypeScript not enabled (set TYPESCRIPT.enabled=true to override)"
+    cmds:
+      - tsc --project {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).tsconfig}} --noEmit
+
+  typescript:check:watch:
+    desc: Run TypeScript type checking in watch mode
+    aliases:
+      - tsc:check:watch
+    preconditions:
+      - sh: '[ -n "{{.ENABLE_TYPESCRIPT}}" ]'
+        msg: "TypeScript not enabled"
+    cmds:
+      - tsc --project {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).tsconfig}} --noEmit --watch
+    watch: true
+
+  # ==========================================================================
+  # Building
+  # ==========================================================================
+
+  typescript:build:
+    desc: Build TypeScript project
+    aliases:
+      - tsc:build
+    preconditions:
+      - sh: '[ -n "{{.ENABLE_TYPESCRIPT}}" ]'
+        msg: "TypeScript not enabled"
+    cmds:
+      - tsc --project {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).tsconfig}}
+    sources:
+      - '{{(merge .TYPESCRIPT_defaults .TYPESCRIPT).src_dir}}/**/*.ts'
+      - '{{(merge .TYPESCRIPT_defaults .TYPESCRIPT).tsconfig}}'
+    generates:
+      - '{{(merge .TYPESCRIPT_defaults .TYPESCRIPT).out_dir}}/**/*.js'
+      - '{{(merge .TYPESCRIPT_defaults .TYPESCRIPT).out_dir}}/**/*.d.ts'
+      - '{{(merge .TYPESCRIPT_defaults .TYPESCRIPT).build_info_file}}'
+
+  typescript:build:watch:
+    desc: Build TypeScript project in watch mode
+    aliases:
+      - tsc:build:watch
+    preconditions:
+      - sh: '[ -n "{{.ENABLE_TYPESCRIPT}}" ]'
+        msg: "TypeScript not enabled"
+    cmds:
+      - tsc --project {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).tsconfig}} --watch
+    watch: true
+
+  # ==========================================================================
+  # Cleaning
+  # ==========================================================================
+
+  typescript:clean:
+    desc: Clean TypeScript build artifacts
+    aliases:
+      - tsc:clean
+    preconditions:
+      - sh: '[ -n "{{.ENABLE_TYPESCRIPT}}" ]'
+        msg: "TypeScript not enabled"
+    cmds:
+      - rm -rf {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).out_dir}}
+      - rm -f {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).build_info_file}}
+
+  # ==========================================================================
+  # Info
+  # ==========================================================================
+
+  typescript:info:
+    desc: Show TypeScript configuration
+    aliases:
+      - tsc:info
+    cmds:
+      - |
+        echo "TypeScript Configuration:"
+        echo "  Enabled:     {{if .ENABLE_TYPESCRIPT}}true{{else}}false{{end}}"
+        echo "  Detected:    {{if ._TYPESCRIPT_DETECTED}}true{{else}}false{{end}}"
+        echo "  Config:      {{merge .TYPESCRIPT_defaults .TYPESCRIPT | toJson}}"
