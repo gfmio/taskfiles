@@ -69,9 +69,8 @@ tasks:
     desc: Run TypeScript type checking
     aliases:
       - tsc:check
-    preconditions:
-      - sh: '[ -n "{{.ENABLE_TYPESCRIPT}}" ]'
-        msg: "TypeScript not enabled (set TYPESCRIPT.enabled=true to override)"
+    status:
+      - '[ -z "{{.ENABLE_TYPESCRIPT}}" ]'
     cmds:
       - tsc --project {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).tsconfig}} --noEmit
 
@@ -79,9 +78,8 @@ tasks:
     desc: Run TypeScript type checking in watch mode
     aliases:
       - tsc:check:watch
-    preconditions:
-      - sh: '[ -n "{{.ENABLE_TYPESCRIPT}}" ]'
-        msg: "TypeScript not enabled"
+    status:
+      - '[ -z "{{.ENABLE_TYPESCRIPT}}" ]'
     cmds:
       - tsc --project {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).tsconfig}} --noEmit --watch
     watch: true
@@ -94,9 +92,8 @@ tasks:
     desc: Build TypeScript project
     aliases:
       - tsc:build
-    preconditions:
-      - sh: '[ -n "{{.ENABLE_TYPESCRIPT}}" ]'
-        msg: "TypeScript not enabled"
+    status:
+      - '[ -z "{{.ENABLE_TYPESCRIPT}}" ]'
     cmds:
       - tsc --project {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).tsconfig}}
     sources:
@@ -111,9 +108,8 @@ tasks:
     desc: Build TypeScript project in watch mode
     aliases:
       - tsc:build:watch
-    preconditions:
-      - sh: '[ -n "{{.ENABLE_TYPESCRIPT}}" ]'
-        msg: "TypeScript not enabled"
+    status:
+      - '[ -z "{{.ENABLE_TYPESCRIPT}}" ]'
     cmds:
       - tsc --project {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).tsconfig}} --watch
     watch: true
@@ -126,9 +122,8 @@ tasks:
     desc: Clean TypeScript build artifacts
     aliases:
       - tsc:clean
-    preconditions:
-      - sh: '[ -n "{{.ENABLE_TYPESCRIPT}}" ]'
-        msg: "TypeScript not enabled"
+    status:
+      - '[ -z "{{.ENABLE_TYPESCRIPT}}" ]'
     cmds:
       - rm -rf {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).out_dir}}
       - rm -f {{(merge .TYPESCRIPT_defaults .TYPESCRIPT).build_info_file}}
