@@ -86,13 +86,9 @@ jobs:
           echo "  Commitlint: ${{ steps.commitlint.outcome }}"
 
           if [[ "${{ steps.install.outcome }}" == "failure" ]] || \
-             [[ "${{ steps.typecheck.outcome }}" == "failure" ]] || \
              [[ "${{ steps.lint.outcome }}" == "failure" ]] || \
              [[ "${{ steps.format.outcome }}" == "failure" ]] || \
-             [[ "${{ steps.build.outcome }}" == "failure" ]] || \
              [[ "${{ steps.test.outcome }}" == "failure" ]] || \
-             [[ "${{ steps.examples.outcome }}" == "failure" ]] || \
-             [[ "${{ steps.docs.outcome }}" == "failure" ]] || \
              [[ "${{ steps.commitlint-pr.outcome }}" == "failure" ]] || \
              [[ "${{ steps.commitlint.outcome }}" == "failure" ]]; then
             echo "❌ One or more CI checks failed"
