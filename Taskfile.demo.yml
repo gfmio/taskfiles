@@ -1,0 +1,188 @@
+# Taskfile-v3-demo.yml
+# V3 Architecture Demonstration and Testing
+
+version: "3"
+
+# Example root-level overrides (commented out - uncomment to test)
+# vars:
+#   BIOME:
+#     map:
+#       enabled: false
+#   TYPESCRIPT:
+#     map:
+#       tsconfig: tsconfig.build.json
+
+includes:
+  all:
+    taskfile: ./all.yml
+    flatten: true
+
+tasks:
+  default:
+    desc: Show demo menu
+    cmds:
+      - echo "V3 Architecture Demo"
+      - echo "===================="
+      - echo ""
+      - echo "Available demos (task -t Taskfile-v3-demo.yml ...):"
+      - echo "  demo:auto-detect   - Auto-detection (default)"
+      - echo "  demo:force-enable  - Force enable tools"
+      - echo "  demo:force-disable - Force disable tools"
+      - echo "  demo:custom-config - Custom configuration"
+      - echo "  demo:all           - Run all demos"
+      - echo ""
+      - echo "Info tasks:"
+      - echo "  info               - Show all configurations"
+      - echo "  info:biome         - Show Biome config"
+      - echo "  info:typescript    - Show TypeScript config"
+      - echo ""
+      - echo "Test tasks (for debugging):"
+      - echo "  test:merge         - Test merge function"
+      - echo "  test:enable-flags  - Test enable flag computation"
+      - echo "  test:status        - Test status-based skipping"
+
+  demo:all:
+    desc: Run all demos
+    cmds:
+      - task: demo:auto-detect
+      - echo ""
+      - echo "========================================"
+      - echo ""
+      - task: demo:force-enable
+      - echo ""
+      - echo "========================================"
+      - echo ""
+      - task: demo:force-disable
+      - echo ""
+      - echo "========================================"
+      - echo ""
+      - task: demo:custom-config
+
+  demo:auto-detect:
+    desc: "Demo: Auto-detection"
+    cmds:
+      - echo "DEMO 1 - Auto-Detection"
+      - echo "======================="
+      - echo "No vars set, tools auto-detect based on files"
+      - echo ""
+      - task: info:biome
+      - echo ""
+      - task: info:typescript
+      - echo ""
+      - echo "✓ Both tools auto-detected"
+
+  demo:force-enable:
+    desc: "Demo: Force enable (edit root vars to test)"
+    cmds:
+      - echo "DEMO 2 - Force Enable"
+      - echo "====================="
+      - echo "To test: Edit Taskfile.demo.yml and uncomment the TYPESCRIPT.enabled: true in root vars"
+      - echo ""
+      - task: info:typescript
+      - echo ""
+      - echo "Current behavior (auto-detect):"
+      - task: typescript:check
+        ignore_error: true
+      - echo "Note: Define TYPESCRIPT at root vars level to override"
+
+  demo:force-disable:
+    desc: "Demo: Force disable (edit root vars to test)"
+    cmds:
+      - echo "DEMO 3 - Force Disable"
+      - echo "======================"
+      - echo "To test: Edit Taskfile.demo.yml and uncomment the BIOME.enabled: false in root vars"
+      - echo ""
+      - task: info:biome
+      - echo ""
+      - echo "Current behavior:"
+      - task: biome:check
+        ignore_error: true
+      - echo "Note: Define BIOME at root vars level to override"
+
+  demo:custom-config:
+    desc: "Demo: Custom configuration (edit root vars to test)"
+    cmds:
+      - echo "DEMO 4 - Custom Configuration"
+      - echo "=============================="
+      - echo "To test: Edit Taskfile.demo.yml and uncomment the TYPESCRIPT config in root vars"
+      - echo ""
+      - task: info:typescript
+      - echo ""
+      - echo "Note: Define TYPESCRIPT at root vars level with custom tsconfig, out_dir, etc."
+
+  info:
+    desc: Show all tool configurations
+    cmds:
+      - task: info:biome
+      - echo ""
+      - task: info:typescript
+
+  info:biome:
+    desc: Show Biome configuration
+    cmds:
+      - task: biome:info
+
+  info:typescript:
+    desc: Show TypeScript configuration
+    cmds:
+      - task: typescript:info
+
+  test:merge:
+    desc: Test merge function
+    vars:
+      TYPESCRIPT:
+        map:
+          enabled: "false"
+          tsconfig: custom.json
+    cmds:
+      - echo "Testing Merge Function"
+      - echo "======================"
+      - echo ""
+      - echo "TYPESCRIPT_defaults:"
+      - echo "{{.TYPESCRIPT_defaults | toJson}}"
+      - echo ""
+      - echo "TYPESCRIPT (override):"
+      - echo "{{.TYPESCRIPT | toJson}}"
+      - echo ""
+      - echo "Merged:"
+      - echo "{{merge .TYPESCRIPT_defaults .TYPESCRIPT | toJson}}"
+
+  test:enable-flags:
+    desc: Test ENABLE_* computation
+    vars:
+      BIOME:
+        map:
+          enabled: "false"
+      TYPESCRIPT:
+        map:
+          enabled: "true"
+    cmds:
+      - echo "Testing Enable Flags"
+      - echo "===================="
+      - |
+        echo "BIOME (enabled=false):"
+        echo "  ENABLE_BIOME = '{{.ENABLE_BIOME}}'"
+        echo "  Empty? $([ -z '{{.ENABLE_BIOME}}' ] && echo YES || echo NO)"
+        echo ""
+        echo "TYPESCRIPT (enabled=true):"
+        echo "  ENABLE_TYPESCRIPT = '{{.ENABLE_TYPESCRIPT}}'"
+        echo "  Empty? $([ -z '{{.ENABLE_TYPESCRIPT}}' ] && echo YES || echo NO)"
+
+  test:status:
+    desc: Test status-based skipping
+    vars:
+      BIOME:
+        map:
+          enabled: "false"
+    cmds:
+      - echo "Testing Status-Based Skipping"
+      - echo "=============================="
+      - echo "BIOME.enabled = false"
+      - echo ""
+      - echo "Running biome:check (should skip)..."
+      - task: biome:check
+      - echo "✓ Skipped - no error"
+      - echo ""
+      - echo "Running lint workflow..."
+      - task: lint
+      - echo "✓ Workflow completed"

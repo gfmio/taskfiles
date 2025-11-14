@@ -1,0 +1,71 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "changelog-sections": [
+    {
+      "hidden": false,
+      "section": "Features",
+      "type": "feat"
+    },
+    {
+      "hidden": false,
+      "section": "Bug Fixes",
+      "type": "fix"
+    },
+    {
+      "hidden": false,
+      "section": "Performance Improvements",
+      "type": "perf"
+    },
+    {
+      "hidden": false,
+      "section": "Reverts",
+      "type": "revert"
+    },
+    {
+      "hidden": true,
+      "section": "Documentation",
+      "type": "docs"
+    },
+    {
+      "hidden": false,
+      "section": "Code Refactoring",
+      "type": "refactor"
+    },
+    {
+      "hidden": true,
+      "section": "Build System",
+      "type": "build"
+    },
+    {
+      "hidden": true,
+      "section": "Styles",
+      "type": "style"
+    },
+    {
+      "hidden": true,
+      "section": "Tests",
+      "type": "test"
+    },
+    {
+      "hidden": true,
+      "section": "Continuous Integration",
+      "type": "ci"
+    },
+    {
+      "hidden": true,
+      "section": "Miscellaneous Chores",
+      "type": "chore"
+    }
+  ],
+  "packages": {
+    ".": {
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": true,
+      "changelog-path": "CHANGELOG.md",
+      "draft": false,
+      "package-name": "taskfiles",
+      "release-type": "simple",
+      "prerelease": false
+    }
+  }
+}

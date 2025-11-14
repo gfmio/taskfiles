@@ -1,0 +1,56 @@
+# Taskfile configuration
+# Path: logical/lint.yml
+# Description: High-level linting workflow tasks (V3 architecture)
+
+version: "3"
+
+tasks:
+  # ==========================================================================
+  # Main Lint Tasks
+  # ==========================================================================
+
+  lint:
+    desc: Run all linting checks
+    aliases:
+      - lint:check
+    cmds:
+      - task: biome:check
+      # Future: Add more linters here
+      # - task: eslint:check
+      # - task: ruff:check
+      # - task: clippy:check
+
+  lint:fix:
+    desc: Fix all linting issues
+    aliases:
+      - fix
+    cmds:
+      - task: biome:check:write
+      # Future: Add more linters here
+      # - task: eslint:fix
+      # - task: ruff:fix
+
+  lint:fix:unsafe:
+    desc: Fix all linting issues (unsafe)
+    aliases:
+      - fix:unsafe
+    cmds:
+      - task: biome:check:unsafe
+
+  # ==========================================================================
+  # Watch Mode Tasks
+  # ==========================================================================
+
+  lint:watch:
+    desc: Run linting in watch mode
+    cmds:
+      - task: biome:check:watch
+    watch: true
+
+  lint:fix:watch:
+    desc: Run linting with auto-fix in watch mode
+    aliases:
+      - fix:watch
+    cmds:
+      - task: biome:check:write:watch
+    watch: true

@@ -1,0 +1,159 @@
+# Taskfile configuration
+# Path: tools/biome.yml
+# Description: Biome linter and formatter (V3 architecture with merge pattern)
+
+version: "3"
+
+vars:
+  # ============================================================================
+  # Default Configuration (Tool-Defined)
+  # ============================================================================
+
+  BIOME_defaults:
+    map:
+      # Control: null (auto-detect), true (force enable), false (force disable)
+      enabled: null
+
+      # Configuration file
+      config: biome.json
+
+      # Source patterns
+      src_patterns: "."
+
+  # DON'T define BIOME here - let parent override
+
+  # ============================================================================
+  # Merged Configuration
+  # ============================================================================
+
+  # Merge defaults with user config
+  BIOME_config:
+    sh: echo '{{merge .BIOME_defaults .BIOME | toJson}}'
+
+  # ============================================================================
+  # Detection
+  # ============================================================================
+
+  _BIOME_DETECTED:
+    sh: |
+      # Get config path from merged config
+      CONFIG="{{(merge .BIOME_defaults .BIOME).config}}"
+
+      # Check for biome config files
+      test -f "$CONFIG" && echo "1" && exit 0
+      test -f "biome.jsonc" && echo "1" && exit 0
+
+      # Check for biome in package.json
+      test -f "package.json" && grep -q '"@biomejs/biome"' package.json 2>/dev/null && echo "1" && exit 0
+
+      echo ""
+
+  # ============================================================================
+  # Enable Flag (Computed)
+  # ============================================================================
+
+  ENABLE_BIOME:
+    sh: |
+      ENABLED='{{(merge .BIOME_defaults .BIOME).enabled}}'
+
+      if [ "$ENABLED" = "true" ]; then
+        echo "1"
+      elif [ "$ENABLED" = "false" ]; then
+        echo ""
+      else
+        # null or any other value - use detection
+        [ -n "{{._BIOME_DETECTED}}" ] && echo "1" || echo ""
+      fi
+
+tasks:
+  # ==========================================================================
+  # Check (Linting)
+  # ==========================================================================
+
+  biome:check:
+    desc: Run Biome linting checks
+    status:
+      - '[ -z "{{.ENABLE_BIOME}}" ]'
+    cmds:
+      - bun run biome check {{(merge .BIOME_defaults .BIOME).src_patterns}}
+
+  biome:check:write:
+    desc: Run Biome with auto-fix
+    status:
+      - '[ -z "{{.ENABLE_BIOME}}" ]'
+    cmds:
+      - bun run biome check --write {{(merge .BIOME_defaults .BIOME).src_patterns}}
+
+  biome:check:unsafe:
+    desc: Run Biome with unsafe auto-fix
+    status:
+      - '[ -z "{{.ENABLE_BIOME}}" ]'
+    cmds:
+      - bun run biome check --write --unsafe {{(merge .BIOME_defaults .BIOME).src_patterns}}
+
+  # ==========================================================================
+  # Format
+  # ==========================================================================
+
+  biome:format:
+    desc: Check formatting with Biome
+    status:
+      - '[ -z "{{.ENABLE_BIOME}}" ]'
+    cmds:
+      - bun run biome format {{(merge .BIOME_defaults .BIOME).src_patterns}}
+
+  biome:format:write:
+    desc: Format code with Biome
+    status:
+      - '[ -z "{{.ENABLE_BIOME}}" ]'
+    cmds:
+      - bun run biome format --write {{(merge .BIOME_defaults .BIOME).src_patterns}}
+
+  # ==========================================================================
+  # Watch Mode
+  # ==========================================================================
+
+  biome:check:watch:
+    desc: Run Biome linting in watch mode
+    status:
+      - '[ -z "{{.ENABLE_BIOME}}" ]'
+    cmds:
+      - bun run biome check {{(merge .BIOME_defaults .BIOME).src_patterns}} --watch
+    watch: true
+
+  biome:check:write:watch:
+    desc: Run Biome with auto-fix in watch mode
+    status:
+      - '[ -z "{{.ENABLE_BIOME}}" ]'
+    cmds:
+      - bun run biome check --write {{(merge .BIOME_defaults .BIOME).src_patterns}} --watch
+    watch: true
+
+  biome:format:watch:
+    desc: Check formatting with Biome in watch mode
+    status:
+      - '[ -z "{{.ENABLE_BIOME}}" ]'
+    cmds:
+      - bun run biome format {{(merge .BIOME_defaults .BIOME).src_patterns}} --watch
+    watch: true
+
+  biome:format:write:watch:
+    desc: Format code with Biome in watch mode
+    status:
+      - '[ -z "{{.ENABLE_BIOME}}" ]'
+    cmds:
+      - bun run biome format --write {{(merge .BIOME_defaults .BIOME).src_patterns}} --watch
+    watch: true
+
+  # ==========================================================================
+  # Info
+  # ==========================================================================
+
+  biome:info:
+    desc: Show Biome configuration
+    cmds:
+      - |
+        echo "Biome Configuration:"
+        echo "  Enabled:        {{if .ENABLE_BIOME}}true{{else}}false{{end}}"
+        echo "  Detected:       {{if ._BIOME_DETECTED}}true{{else}}false{{end}}"
+        echo "  Config:         {{.BIOME_config}}"

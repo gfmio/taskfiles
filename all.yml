@@ -1,0 +1,36 @@
+# Taskfile configuration
+# Path: all.yml
+# Description: All-in-one include for taskfiles - includes tools and logical workflows
+#
+# Usage - Option 1 (Recommended): Import without namespace, let inner structure show
+#   includes:
+#     all:
+#       taskfile: https://raw.githubusercontent.com/gfmio/taskfiles/main/all.yml
+#       flatten: true  # Merge all tasks into parent namespace
+#
+# Usage - Option 2: Keep under taskfiles: namespace
+#   includes:
+#     taskfiles:
+#       taskfile: https://raw.githubusercontent.com/gfmio/taskfiles/main/all.yml
+#       # Tasks will be: taskfiles:lint, taskfiles:biome:check, etc.
+#
+# With local development:
+#   vars:
+#     TASKFILES_BASE_URL: ./path/to/taskfiles
+#   includes:
+#     all:
+#       taskfile: "{{.TASKFILES_BASE_URL}}/all.yml"
+#       flatten: true
+
+version: "3"
+
+includes:
+  # Tools (flattened for convenience)
+  tools:
+    taskfile: ./tools.yml
+    flatten: true
+
+  # Logical workflows (flattened for convenience)
+  logical:
+    taskfile: ./logical.yml
+    flatten: true

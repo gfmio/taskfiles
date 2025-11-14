@@ -1,0 +1,25 @@
+# Example Taskfile using taskfiles repo
+# This demonstrates how to use the taskfiles in a TypeScript project
+
+version: "3"
+
+vars:
+  # Use local taskfiles (parent directory)
+  TASKFILES_BASE_URL: ../..
+
+includes:
+  # All-in-one include: detection + tools + logical workflows
+  all:
+    taskfile: "{{.TASKFILES_BASE_URL}}/all.yml"
+    flatten: true
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list-all
+
+  info:
+    desc: Show detected configuration
+    cmds:
+      - task: detection:info

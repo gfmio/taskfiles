@@ -1,0 +1,34 @@
+# Taskfile configuration
+# Path: Taskfile.yml
+# Description: Root taskfile for the taskfiles repository
+
+version: "3"
+
+includes:
+  # Include all tool-specific tasks
+  tools:
+    taskfile: ./tools.yml
+    flatten: true
+
+  # Include all logical workflow tasks
+  logical:
+    taskfile: ./logical.yml
+    flatten: true
+
+tasks:
+  default:
+    desc: Show all available tasks
+    cmd: task --list-all
+    silent: true
+
+  info:
+    desc: Display detected project configuration
+    cmds:
+      - task: biome:info
+      - task: typescript:info
+
+  validate:
+    desc: Validate all Taskfile.yml files
+    cmds:
+      - task --dry --list-all > /dev/null
+      - echo "✓ All Taskfiles are valid"
